@@ -7,5 +7,5 @@ public class GridItem : MonoBehaviour
     public int IndexI;
     public int IndexJ;
     public bool IsFull;
-    public Piece CurrentPiece;
+    public PieceChild CurrentPieceChild;
 }

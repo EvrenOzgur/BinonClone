@@ -96,3 +96,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IndexI: 0
   IndexJ: 0
+  IsFull: 0
+  CurrentPieceChild: {fileID: 0}

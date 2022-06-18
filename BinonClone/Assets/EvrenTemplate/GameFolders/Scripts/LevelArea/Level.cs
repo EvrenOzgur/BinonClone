@@ -9,7 +9,11 @@ public class Level : MonoBehaviour
     PieceSlot currentPieceSlot;
     Piece currentPiece;
     bool currentPieceCanMove;
-  
+
+
+
+
+
     private void OnEnable()
     {
         M_Observer.OnGameCreate += GameCreate;
@@ -45,11 +49,11 @@ public class Level : MonoBehaviour
 
     }
 
-   
 
-  
 
-  
+
+
+
 
     private void GameCreate()
     {
@@ -97,7 +101,7 @@ public class Level : MonoBehaviour
         if (fingerIndex == 0)
         {
             pickedObject = PickObject(fingerPos);
-            if (pickedObject!=null)
+            if (pickedObject != null)
             {
                 if (pickedObject.CompareTag("Slot"))
                 {
@@ -106,14 +110,14 @@ public class Level : MonoBehaviour
                     {
                         currentPiece = currentPieceSlot.CurrentPiece;
                         currentPiece.transform.localScale *= 2;
-                        currentPiece.transform.localPosition += new Vector3(0,1,0);
+                        currentPiece.transform.localPosition += new Vector3(0, 1, 0);
                         currentPieceCanMove = true;
                     }
-                  
+
                 }
-            
+
             }
-       
+
         }
     }
     private void FingerGestures_OnFingerMove(int fingerIndex, Vector2 fingerPos)
@@ -122,7 +126,7 @@ public class Level : MonoBehaviour
         {
             if (currentPieceCanMove)
             {
-                currentPiece.transform.position = GetWorldPos(fingerPos) + new Vector3(0,1,0);
+                currentPiece.transform.position = GetWorldPos(fingerPos) + new Vector3(0, 1, 0);
             }
         }
     }
@@ -132,8 +136,7 @@ public class Level : MonoBehaviour
         {
             if (currentPieceCanMove)
             {
-                currentPiece.transform.localPosition = Vector3.zero;
-                currentPiece.transform.localScale /= 2;
+                PieceSetGridControl();
                 currentPieceCanMove = false;
                 currentPiece = null;
                 currentPieceSlot = null;
@@ -142,6 +145,59 @@ public class Level : MonoBehaviour
         }
     }
 
+    private void PieceSetGridControl()
+    {
+        bool _setSucceed = false;
+        for (int i = 0; i < currentPiece.PieceChilds.Length; i++)
+        {
+            int _controlX, _controlY;
+            _controlX = Mathf.RoundToInt(currentPiece.PieceChilds[i].transform.position.x);
+            _controlY = Mathf.RoundToInt(currentPiece.PieceChilds[i].transform.position.y);
+            if (PieceInGridControl(_controlX,_controlY))
+            {
+                _setSucceed = true;
+            }
+            else
+            {
+                _setSucceed = false;
+                break;
+            }
+
+        }
+        if (_setSucceed)
+        {
+            for (int i = 0; i < currentPiece.PieceChilds.Length; i++)
+            {
+                int _controlX, _controlY;
+                _controlX = Mathf.RoundToInt(currentPiece.PieceChilds[i].transform.position.x);
+                _controlY = Mathf.RoundToInt(currentPiece.PieceChilds[i].transform.position.y);
+                M_Grid.I.GridArray[_controlX, _controlY].IsFull = true;
+                M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild = currentPiece.PieceChilds[i];
+                M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.SetParent(M_Grid.I.GridArray[_controlX, _controlY].transform);
+                M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.localScale = Vector3.one;
+                M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.localPosition = new Vector3(0,0,-0.5f);
+            }
+            currentPieceSlot.isFull = false;
+            Destroy(currentPiece.gameObject);
+        }
+        else
+        {
+            currentPiece.transform.localPosition = Vector3.zero;
+            currentPiece.transform.localScale /= 2;
+        }
+    }
+    private bool PieceInGridControl(int controlX, int controlY)
+    {
+        if (controlX <= M_Grid.I.GridLenghtI - 1 && 
+            controlX >= 0 && 
+            controlY <= M_Grid.I.GridLenghtJ - 1 && 
+            controlY >= 0 && 
+            M_Grid.I.GridArray[controlX,controlY].IsFull == false )
+        {
+            return true;
+        }
+        return false;
+    }
 
     //RAYCAST ÝLE OBJE YAKALAMA.
     GameObject PickObject(Vector2 screenPos)

@@ -8,9 +8,9 @@ public class M_Grid : MonoBehaviour
     // --------- Grid ----------
     public GridItem GridItemPrefab;
 
-    [HideInInspector] public int GridLenghtI = 10;
-    [HideInInspector] public int GridLenghtJ = 10;
-    GridItem[,] GridArray;
+    public int GridLenghtI = 10;
+    public int GridLenghtJ = 10;
+    public GridItem[,] GridArray;
 
     private void OnEnable()
     {
@@ -34,12 +34,31 @@ public class M_Grid : MonoBehaviour
         {
             for (int j = 0; j < GridLenghtJ; j++)
             {
-                GridItem _gridItem = Instantiate(GridItemPrefab , transform);
-                _gridItem.transform.position = new Vector3(i,j,0);
+                GridItem _gridItem = Instantiate(GridItemPrefab, transform);
+                _gridItem.transform.position = new Vector3(i, j, 0.1f);
                 _gridItem.IndexI = i;
                 _gridItem.IndexJ = j;
                 GridArray[i, j] = _gridItem;
             }
+        }
+    }
+
+    public static M_Grid II;
+
+    public static M_Grid I
+    {
+        get
+        {
+            if (II == null)
+            {
+                GameObject _g = GameObject.Find("M_Grid");
+                if (_g != null)
+                {
+                    II = _g.GetComponent<M_Grid>();
+                }
+            }
+
+            return II;
         }
     }
 }
