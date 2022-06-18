@@ -134,9 +134,12 @@ public class Level : MonoBehaviour
     {
         if (fingerIndex == 0)
         {
+            Vector3 _fingerUpGridPos = new Vector3(Mathf.RoundToInt(GetWorldPos(fingerPos).x) , Mathf.RoundToInt(GetWorldPos(fingerPos).y) , 0);
             if (currentPieceCanMove)
             {
+
                 PieceSetGridControl();
+                M_Grid.I.SucceedControl(_fingerUpGridPos);
                 currentPieceCanMove = false;
                 currentPiece = null;
                 currentPieceSlot = null;
