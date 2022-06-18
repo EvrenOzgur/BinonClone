@@ -179,6 +179,7 @@ public class Level : MonoBehaviour
             }
             currentPieceSlot.isFull = false;
             Destroy(currentPiece.gameObject);
+            M_Piece.I.PieceSlotsControl();
         }
         else
         {
