@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class Level : MonoBehaviour
 {
     GameObject pickedObject;
@@ -110,7 +110,7 @@ public class Level : MonoBehaviour
                     {
                         currentPiece = currentPieceSlot.CurrentPiece;
                         currentPiece.transform.localScale *= 2;
-                        currentPiece.transform.localPosition += new Vector3(0, 1, 0);
+                        currentPiece.transform.localPosition += new Vector3(0, 1, -1);
                         currentPieceCanMove = true;
                     }
 
@@ -126,7 +126,7 @@ public class Level : MonoBehaviour
         {
             if (currentPieceCanMove)
             {
-                currentPiece.transform.position = GetWorldPos(fingerPos) + new Vector3(0, 1, 0);
+                currentPiece.transform.position = GetWorldPos(fingerPos) + new Vector3(0, 1, -1);
             }
         }
     }
@@ -140,6 +140,7 @@ public class Level : MonoBehaviour
 
                 PieceSetGridControl();
                 M_Grid.I.SucceedControl(_fingerUpGridPos);
+                M_Grid.I.GameContinueControl();
                 currentPieceCanMove = false;
                 currentPiece = null;
                 currentPieceSlot = null;
@@ -177,8 +178,8 @@ public class Level : MonoBehaviour
                 M_Grid.I.GridArray[_controlX, _controlY].IsFull = true;
                 M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild = currentPiece.PieceChilds[i];
                 M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.SetParent(M_Grid.I.GridArray[_controlX, _controlY].transform);
-                M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.localScale = Vector3.one;
-                M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.localPosition = new Vector3(0,0,-0.5f);
+                M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.DOScale(Vector3.one , 0.1f);
+                M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.DOLocalMove(new Vector3(0,0,-0.5f) , 0.1f);
             }
             currentPieceSlot.isFull = false;
             Destroy(currentPiece.gameObject);
@@ -202,6 +203,10 @@ public class Level : MonoBehaviour
         }
         return false;
     }
+
+   
+        
+
 
     //RAYCAST ÝLE OBJE YAKALAMA.
     GameObject PickObject(Vector2 screenPos)

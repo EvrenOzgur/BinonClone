@@ -109,6 +109,82 @@ public class M_Grid : MonoBehaviour
             }
         }
     }
+    public void GameContinueControl()
+    {
+        List<int> _continueControlList = new List<int>();
+        int _emptySlotCount = 0;
+        for (int i = 0; i < M_Piece.I.PieceSlots.Length; i++)
+        {
+            if (_continueControlList.Count != 0) break;
+            if (M_Piece.I.PieceSlots[i].isFull)
+            {
+                Piece _piece = Instantiate(M_Piece.I.PieceSlots[i].CurrentPiece) ;
+                for (int x = 0; x < GridLenghtI; x++)
+                {
+                    if (_continueControlList.Count != 0) break;
+
+                    for (int y = 0; y < GridLenghtJ; y++)
+                    {
+                        if (_continueControlList.Count != 0) break;
+                        _piece.transform.position = new Vector3(x,y,0);
+                        int _counter = 0;
+                        for (int j = 0; j < _piece.PieceChilds.Length; j++)
+                        {
+                            int _controlX = Mathf.RoundToInt(_piece.PieceChilds[j].transform.position.x);
+                            int _controlY = Mathf.RoundToInt(_piece.PieceChilds[j].transform.position.y);
+                            if (PieceInGridControl(_controlX,_controlY))
+                            {
+                                if (GridArray[_controlX,_controlY].IsFull == false)
+                                {
+                                    _counter++;
+                                }
+                            }
+                        }
+                       
+                        if (_counter == _piece.PieceChilds.Length)
+                        {
+                            _continueControlList.Add(_counter);
+                        }
+
+                    }
+                }
+                Destroy(_piece.gameObject);
+                
+            }
+            else
+            {
+              
+                _emptySlotCount++;
+            }
+        }
+       
+        if (_emptySlotCount == M_Piece.I.PieceSlots.Length )
+        {
+            return;
+        }
+        else
+        {
+           
+            if (_continueControlList.Count == 0)
+            {
+                M_Observer.OnGameFail?.Invoke();
+                print("Fail");
+            }
+        }
+       
+    }
+    private bool PieceInGridControl(int controlX, int controlY)
+    {
+        if (controlX <= GridLenghtI - 1 &&
+            controlX >= 0 &&
+            controlY <= GridLenghtJ - 1 &&
+            controlY >= 0 
+          )
+        {
+            return true;
+        }
+        return false;
+    }
 
     public static M_Grid II;
 

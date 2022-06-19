@@ -51,7 +51,9 @@ public class M_Piece: MonoBehaviour
     {
         for (int i = 0; i < PieceSlots.Length; i++)
         {
-              int _randomPieceIndex = Random.Range(0,PiecePrefabs.Length);
+            //  int _randomPieceIndex = Random.Range(0,PiecePrefabs.Length);
+            int _randomPieceIndex = 1;
+
             Piece _piece = Instantiate(PiecePrefabs[_randomPieceIndex] , PieceSlots[i].transform);
             _piece.transform.localPosition = Vector3.zero;
             PieceSlots[i].CurrentPiece = _piece;
