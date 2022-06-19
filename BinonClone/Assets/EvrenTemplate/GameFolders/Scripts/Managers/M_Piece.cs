@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class M_Piece: MonoBehaviour
 {
@@ -51,11 +52,11 @@ public class M_Piece: MonoBehaviour
     {
         for (int i = 0; i < PieceSlots.Length; i++)
         {
-            //  int _randomPieceIndex = Random.Range(0,PiecePrefabs.Length);
-            int _randomPieceIndex = 1;
+              int _randomPieceIndex = Random.Range(0,PiecePrefabs.Length);
 
             Piece _piece = Instantiate(PiecePrefabs[_randomPieceIndex] , PieceSlots[i].transform);
-            _piece.transform.localPosition = Vector3.zero;
+            _piece.transform.localPosition = PieceSlots[i].transform.localPosition + new Vector3(30,0,0);
+            _piece.transform.DOLocalMove(Vector3.zero , 0.25f).SetEase(Ease.OutExpo);
             PieceSlots[i].CurrentPiece = _piece;
             PieceSlots[i].isFull = true;
         }
