@@ -3,16 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
+
 public class M_Menu : MonoBehaviour
 {
-    public GameObject MainMenuPanelPrefab;
-    public GameObject GamePanelPrefab;
-    public GameObject PausePanelPrefab;
-    public GameObject CompletePanelPrefab;
+    public static Action OnSetScoreText;
 
-    [HideInInspector] public GameObject CurrentPanel;
+    public Panel MainMenuPanelPrefab;
+    public Panel GamePanelPrefab;
+    public Panel PausePanelPrefab;
+    public Panel CompletePanelPrefab;
+
+    [HideInInspector] public Panel CurrentPanel;
 
     private void Awake()
+    {
+       
+        CurrentPanel = Instantiate(MainMenuPanelPrefab, transform);
+        CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
+
+    }
+
+
+
+  
+
+    private void OnEnable()
     {
         M_Observer.OnGameCreate += GameCreate;
         M_Observer.OnGameReady += GameReady;
@@ -23,14 +39,9 @@ public class M_Menu : MonoBehaviour
         M_Observer.OnGameRetry += GameRetry;
         M_Observer.OnGameContinue += GameContinue;
         M_Observer.OnGameNextLevel += GameNextLevel;
-        CurrentPanel = Instantiate(MainMenuPanelPrefab, transform);
-
-
+        OnSetScoreText += SetScoreText;
     }
-
-
-
-    private void OnDestroy()
+    private void OnDisable()
     {
         M_Observer.OnGameCreate -= GameCreate;
         M_Observer.OnGameReady -= GameReady;
@@ -41,9 +52,9 @@ public class M_Menu : MonoBehaviour
         M_Observer.OnGameRetry -= GameRetry;
         M_Observer.OnGameContinue -= GameContinue;
         M_Observer.OnGameNextLevel -= GameNextLevel;
+        OnSetScoreText -= SetScoreText;
+
     }
-
-
     private void GameCreate()
     {
 
@@ -57,17 +68,18 @@ public class M_Menu : MonoBehaviour
     private void GameStart()
     {
         DeleteCurrentPanel();
-        GameObject _g = Instantiate(GamePanelPrefab, transform);
-        RectTransform _rt = _g.GetComponent<RectTransform>();
-        _rt.DOAnchorPosX(540, 0.5f).SetEase(Ease.OutBack).OnComplete(() => CurrentPanel = _g);
+        CurrentPanel = Instantiate(GamePanelPrefab, transform);
+       
+        CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
+        CurrentPanel.CurrentScoreText.text = M_Level.I.CurrentLevelScore.ToString(); 
+
 
     }
     private void GamePause()
     {
         DeleteCurrentPanel();
-        GameObject _g = Instantiate(PausePanelPrefab, transform);
-        RectTransform _rt = _g.GetComponent<RectTransform>();
-        _rt.DOAnchorPosX(540, 0.5f).SetEase(Ease.OutBack).OnComplete(() => CurrentPanel = _g);
+        CurrentPanel = Instantiate(PausePanelPrefab, transform);
+
     }
     private void GameFail()
     {
@@ -77,50 +89,73 @@ public class M_Menu : MonoBehaviour
     private void GameComplete()
     {
         DeleteCurrentPanel();
-        GameObject _g = Instantiate(CompletePanelPrefab, transform);
-        RectTransform _rt = _g.GetComponent<RectTransform>();
-        _rt.DOAnchorPosX(540, 0.5f).SetEase(Ease.OutBack).OnComplete(() => CurrentPanel = _g);
+        CurrentPanel = Instantiate(CompletePanelPrefab, transform);
+
     }
 
     private void GameRetry()
     {
         DeleteCurrentPanel();
-        GameObject _g = Instantiate(GamePanelPrefab, transform);
-        RectTransform _rt = _g.GetComponent<RectTransform>();
-        _rt.DOAnchorPosX(540, 0.5f).SetEase(Ease.OutBack).OnComplete(() => CurrentPanel = _g);
+        CurrentPanel = Instantiate(GamePanelPrefab, transform);
+
     }
 
     private void GameContinue()
     {
         DeleteCurrentPanel();
-        GameObject _g = Instantiate(GamePanelPrefab, transform);
-        RectTransform _rt = _g.GetComponent<RectTransform>();
-        _rt.DOAnchorPosX(540, 0.5f).SetEase(Ease.OutBack).OnComplete(() => CurrentPanel = _g);
+        CurrentPanel = Instantiate(GamePanelPrefab, transform);
+        CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
+        CurrentPanel.CurrentScoreText.text = M_Level.I.CurrentLevelScore.ToString();
+
     }
 
     private void GameNextLevel()
     {
         DeleteCurrentPanel();
-        GameObject _g = Instantiate(GamePanelPrefab, transform);
-        RectTransform _rt = _g.GetComponent<RectTransform>();
-        _rt.DOAnchorPosX(540, 0.5f).SetEase(Ease.OutBack).OnComplete(() => CurrentPanel = _g);
+        CurrentPanel = Instantiate(GamePanelPrefab, transform);
+
     }
 
     void DeleteCurrentPanel()
     {
         if (CurrentPanel != null)
         {
-            RectTransform _rt = CurrentPanel.GetComponent<RectTransform>();
-            //  float _a = 0;
-            // DOTween.To(() => _a, _b => _a = _b, 1080, 0.5f).OnUpdate(()=>);
-            _rt.DOAnchorPosX(1620, 0.25f).OnComplete(() =>
+
+        
+             Destroy(CurrentPanel.gameObject);
+            CurrentPanel = null;
+
+
+        }
+    }
+    void SetScoreText()
+    {
+        if (CurrentPanel.HighScoreText != null)
+        {
+            CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
+        }
+        if (CurrentPanel.CurrentScoreText !=null)
+        {
+            CurrentPanel.CurrentScoreText.text = M_Level.I.CurrentLevelScore.ToString();
+        }
+    }
+   
+    public static M_Menu II;
+
+    public static M_Menu I
+    {
+        get
+        {
+            if (II == null)
             {
-                Destroy(CurrentPanel);
-                CurrentPanel = null;
-            });
+                GameObject _g = GameObject.Find("M_Menu");
+                if (_g != null)
+                {
+                    II = _g.GetComponent<M_Menu>();
+                }
+            }
 
-
-
+            return II;
         }
     }
 }

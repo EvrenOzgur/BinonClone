@@ -10,7 +10,7 @@ public class Level : MonoBehaviour
     Piece currentPiece;
     bool currentPieceCanMove;
 
-
+    bool isGameStart;
 
 
 
@@ -62,7 +62,7 @@ public class Level : MonoBehaviour
 
     private void GameStart()
     {
-        print("GameStart");
+        isGameStart = true;
     }
     private void GameReady()
     {
@@ -132,7 +132,7 @@ public class Level : MonoBehaviour
     }
     private void FingerGestures_OnFingerUp(int fingerIndex, Vector2 fingerPos, float timeHeldDown)
     {
-        if (fingerIndex == 0)
+        if (fingerIndex == 0 && isGameStart)
         {
             Vector3 _fingerUpGridPos = new Vector3(Mathf.RoundToInt(GetWorldPos(fingerPos).x) , Mathf.RoundToInt(GetWorldPos(fingerPos).y) , 0);
             if (currentPieceCanMove)
@@ -182,6 +182,7 @@ public class Level : MonoBehaviour
                 M_Grid.I.GridArray[_controlX, _controlY].CurrentPieceChild.transform.DOLocalMove(new Vector3(0,0,-0.5f) , 0.1f);
             }
             currentPieceSlot.isFull = false;
+            M_Level.OnSetScore?.Invoke(currentPiece.PieceChilds.Length);
             Destroy(currentPiece.gameObject);
             M_Piece.I.PieceSlotsControl();
         }

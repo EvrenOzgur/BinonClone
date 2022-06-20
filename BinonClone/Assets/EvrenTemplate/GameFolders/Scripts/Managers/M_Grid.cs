@@ -47,6 +47,7 @@ public class M_Grid : MonoBehaviour
     {
         int _succeedControlI = 0;
         int _succeedControlJ = 0;
+        List<int> _succeedScoreList = new List<int>();  
         List<GridItem> _deleteGridItem = new List<GridItem>();
         for (int i = 0; i < GridLenghtI; i++)
         {
@@ -59,6 +60,8 @@ public class M_Grid : MonoBehaviour
             }
             if (_succeedControlJ == GridLenghtJ)
             {
+                _succeedScoreList.Add(i);
+
                 for (int j = 0; j < GridLenghtJ; j++)
                 {
                     if (_deleteGridItem.Contains(GridArray[i, j]) == false)
@@ -82,6 +85,8 @@ public class M_Grid : MonoBehaviour
             }
             if (_succeedControlI == GridLenghtI)
             {
+                _succeedScoreList.Add(j);
+
                 for (int i = 0; i < GridLenghtI; i++)
                 {
                     if (_deleteGridItem.Contains(GridArray[i, j]) == false)
@@ -107,6 +112,15 @@ public class M_Grid : MonoBehaviour
                 _gridItem.CurrentPieceChild = null;
 
             }
+        }
+        if (_succeedScoreList.Count != 0)
+        {
+            int _scoreUp = 0;
+            for (int i = 0; i < _succeedScoreList.Count; i++)
+            {
+                _scoreUp += (i * 10);
+            }
+            M_Level.OnSetScore?.Invoke(_scoreUp);
         }
     }
     public void GameContinueControl()
