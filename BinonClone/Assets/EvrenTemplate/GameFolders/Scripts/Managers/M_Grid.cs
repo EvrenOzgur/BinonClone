@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class M_Grid : MonoBehaviour
 {
+    public static Action<Vector3> OnGridSucceedControl;
     // --------- Grid ----------
     public GridItem GridItemPrefab;
 
@@ -16,10 +18,12 @@ public class M_Grid : MonoBehaviour
     private void OnEnable()
     {
         M_Observer.OnGameCreate += GameCreate;
+        OnGridSucceedControl += SucceedControl;
     }
     private void OnDisable()
     {
         M_Observer.OnGameCreate -= GameCreate;
+        OnGridSucceedControl -= SucceedControl;
 
     }
 
@@ -122,6 +126,7 @@ public class M_Grid : MonoBehaviour
             }
             M_Level.OnSetScore?.Invoke(_scoreUp);
         }
+        GameContinueControl();
     }
     public void GameContinueControl()
     {

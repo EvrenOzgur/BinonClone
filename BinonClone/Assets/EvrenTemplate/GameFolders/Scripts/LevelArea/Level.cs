@@ -139,8 +139,7 @@ public class Level : MonoBehaviour
             {
 
                 PieceSetGridControl();
-                M_Grid.I.SucceedControl(_fingerUpGridPos);
-                M_Grid.I.GameContinueControl();
+                M_Grid.OnGridSucceedControl?.Invoke(_fingerUpGridPos);
                 currentPieceCanMove = false;
                 currentPiece = null;
                 currentPieceSlot = null;

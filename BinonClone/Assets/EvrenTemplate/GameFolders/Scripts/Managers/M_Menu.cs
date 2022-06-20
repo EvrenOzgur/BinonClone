@@ -18,9 +18,7 @@ public class M_Menu : MonoBehaviour
 
     private void Awake()
     {
-       
-        CurrentPanel = Instantiate(MainMenuPanelPrefab, transform);
-        CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
+      
 
     }
 
@@ -58,6 +56,8 @@ public class M_Menu : MonoBehaviour
     private void GameCreate()
     {
 
+        CurrentPanel = Instantiate(MainMenuPanelPrefab, transform);
+        CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
     }
 
     private void GameReady()
