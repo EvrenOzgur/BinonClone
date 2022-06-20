@@ -12,7 +12,7 @@ public class M_Menu : MonoBehaviour
     public Panel MainMenuPanelPrefab;
     public Panel GamePanelPrefab;
     public Panel PausePanelPrefab;
-    public Panel CompletePanelPrefab;
+    public Panel GameFailPanelPrefab;
 
     [HideInInspector] public Panel CurrentPanel;
 
@@ -29,27 +29,19 @@ public class M_Menu : MonoBehaviour
     private void OnEnable()
     {
         M_Observer.OnGameCreate += GameCreate;
-        M_Observer.OnGameReady += GameReady;
         M_Observer.OnGameStart += GameStart;
         M_Observer.OnGamePause += GamePause;
         M_Observer.OnGameFail += GameFail;
-        M_Observer.OnGameComplete += GameComplete;
-        M_Observer.OnGameRetry += GameRetry;
         M_Observer.OnGameContinue += GameContinue;
-        M_Observer.OnGameNextLevel += GameNextLevel;
         OnSetScoreText += SetScoreText;
     }
     private void OnDisable()
     {
         M_Observer.OnGameCreate -= GameCreate;
-        M_Observer.OnGameReady -= GameReady;
         M_Observer.OnGameStart -= GameStart;
         M_Observer.OnGamePause -= GamePause;
         M_Observer.OnGameFail -= GameFail;
-        M_Observer.OnGameComplete -= GameComplete;
-        M_Observer.OnGameRetry -= GameRetry;
         M_Observer.OnGameContinue -= GameContinue;
-        M_Observer.OnGameNextLevel -= GameNextLevel;
         OnSetScoreText -= SetScoreText;
 
     }
@@ -60,18 +52,15 @@ public class M_Menu : MonoBehaviour
         CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
     }
 
-    private void GameReady()
-    {
-        //print("GameReady");
-    }
+  
 
     private void GameStart()
     {
         DeleteCurrentPanel();
         CurrentPanel = Instantiate(GamePanelPrefab, transform);
-       
-        CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
-        CurrentPanel.CurrentScoreText.text = M_Level.I.CurrentLevelScore.ToString(); 
+
+        SetScoreText();
+
 
 
     }
@@ -79,43 +68,31 @@ public class M_Menu : MonoBehaviour
     {
         DeleteCurrentPanel();
         CurrentPanel = Instantiate(PausePanelPrefab, transform);
+        SetScoreText();
+
 
     }
     private void GameFail()
     {
-        //print("GameFail");
-    }
-
-    private void GameComplete()
-    {
         DeleteCurrentPanel();
-        CurrentPanel = Instantiate(CompletePanelPrefab, transform);
+        CurrentPanel = Instantiate(GameFailPanelPrefab, transform);
+        SetScoreText();
 
     }
 
-    private void GameRetry()
-    {
-        DeleteCurrentPanel();
-        CurrentPanel = Instantiate(GamePanelPrefab, transform);
-
-    }
+  
+   
 
     private void GameContinue()
     {
         DeleteCurrentPanel();
         CurrentPanel = Instantiate(GamePanelPrefab, transform);
-        CurrentPanel.HighScoreText.text = M_Level.I.HighScore.ToString();
-        CurrentPanel.CurrentScoreText.text = M_Level.I.CurrentLevelScore.ToString();
+        SetScoreText();
+
 
     }
 
-    private void GameNextLevel()
-    {
-        DeleteCurrentPanel();
-        CurrentPanel = Instantiate(GamePanelPrefab, transform);
-
-    }
-
+  
     void DeleteCurrentPanel()
     {
         if (CurrentPanel != null)

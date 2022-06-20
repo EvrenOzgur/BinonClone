@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/EvrenTemplate/Scene.unity
+    guid: e0974e6839ccb104284327ecd6bf2d59
   m_configObjects: {}

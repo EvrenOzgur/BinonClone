@@ -10,21 +10,16 @@ public class Level : MonoBehaviour
     Piece currentPiece;
     bool currentPieceCanMove;
 
-    bool isGameStart;
+    bool canPlay;
 
 
 
     private void OnEnable()
     {
-        M_Observer.OnGameCreate += GameCreate;
         M_Observer.OnGameStart += GameStart;
-        M_Observer.OnGameReady += GameReady;
         M_Observer.OnGamePause += GamePause;
         M_Observer.OnGameContinue += GameContinue;
         M_Observer.OnGameFail += GameFail;
-        M_Observer.OnGameComplete += GameComplete;
-        M_Observer.OnGameRetry += GameRetry;
-        M_Observer.OnGameNextLevel += GameNextLevel;
         FingerGestures.OnFingerDown += FingerGestures_OnFingerDown;
         FingerGestures.OnFingerMove += FingerGestures_OnFingerMove;
         FingerGestures.OnFingerUp += FingerGestures_OnFingerUp;
@@ -34,15 +29,10 @@ public class Level : MonoBehaviour
     }
     private void OnDisable()
     {
-        M_Observer.OnGameCreate -= GameCreate;
         M_Observer.OnGameStart -= GameStart;
-        M_Observer.OnGameReady -= GameReady;
         M_Observer.OnGamePause -= GamePause;
         M_Observer.OnGameContinue -= GameContinue;
         M_Observer.OnGameFail -= GameFail;
-        M_Observer.OnGameComplete -= GameComplete;
-        M_Observer.OnGameRetry -= GameRetry;
-        M_Observer.OnGameNextLevel -= GameNextLevel;
         FingerGestures.OnFingerDown -= FingerGestures_OnFingerDown;
         FingerGestures.OnFingerMove -= FingerGestures_OnFingerMove;
         FingerGestures.OnFingerUp -= FingerGestures_OnFingerUp;
@@ -55,50 +45,34 @@ public class Level : MonoBehaviour
 
 
 
-    private void GameCreate()
-    {
-        print("GameStart");
-    }
-
+   
     private void GameStart()
     {
-        isGameStart = true;
+        canPlay = true;
     }
-    private void GameReady()
-    {
-        print("GameReady");
-    }
+  
     private void GamePause()
     {
-        print("GamePause");
+        canPlay = false;
     }
     private void GameContinue()
     {
-        print("GameContinue");
+        canPlay = true;
     }
     private void GameFail()
     {
-        print("GameFail");
+      canPlay=false;
     }
-    private void GameComplete()
-    {
-        print("GameComplete");
-    }
-    private void GameRetry()
-    {
-        print("GameRetry");
-    }
-    private void GameNextLevel()
-    {
-        print("GameNextLevel");
-    }
+ 
+  
+   
 
 
 
     //// ----------------------------- GamePlay----------------------------
     private void FingerGestures_OnFingerDown(int fingerIndex, Vector2 fingerPos)
     {
-        if (fingerIndex == 0)
+        if (fingerIndex == 0 && canPlay)
         {
             pickedObject = PickObject(fingerPos);
             if (pickedObject != null)
@@ -110,7 +84,7 @@ public class Level : MonoBehaviour
                     {
                         currentPiece = currentPieceSlot.CurrentPiece;
                         currentPiece.transform.localScale *= 2;
-                        currentPiece.transform.localPosition += new Vector3(0, 1, -1);
+                        currentPiece.transform.localPosition += new Vector3(0, 2.5f, -1);
                         currentPieceCanMove = true;
                     }
 
@@ -122,17 +96,17 @@ public class Level : MonoBehaviour
     }
     private void FingerGestures_OnFingerMove(int fingerIndex, Vector2 fingerPos)
     {
-        if (fingerIndex == 0)
+        if (fingerIndex == 0 && canPlay)
         {
             if (currentPieceCanMove)
             {
-                currentPiece.transform.position = GetWorldPos(fingerPos) + new Vector3(0, 1, -1);
+                currentPiece.transform.position = GetWorldPos(fingerPos) + new Vector3(0, 2.5f, -1);
             }
         }
     }
     private void FingerGestures_OnFingerUp(int fingerIndex, Vector2 fingerPos, float timeHeldDown)
     {
-        if (fingerIndex == 0 && isGameStart)
+        if (fingerIndex == 0 && canPlay)
         {
             Vector3 _fingerUpGridPos = new Vector3(Mathf.RoundToInt(GetWorldPos(fingerPos).x) , Mathf.RoundToInt(GetWorldPos(fingerPos).y) , 0);
             if (currentPieceCanMove)

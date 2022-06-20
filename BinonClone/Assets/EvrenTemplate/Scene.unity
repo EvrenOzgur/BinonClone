@@ -222,7 +222,7 @@ MonoBehaviour:
   MainMenuPanelPrefab: {fileID: -4767921277633763881, guid: 777a2ab2988a4604181536724c4582f6, type: 3}
   GamePanelPrefab: {fileID: -474879803930330939, guid: c9d3e09c9436b6741996f524d331fe93, type: 3}
   PausePanelPrefab: {fileID: 8581467113818380470, guid: c60baaef32ce676449ee5b4c925303a9, type: 3}
-  CompletePanelPrefab: {fileID: -628968699246243093, guid: 8b9a2d82dd9299146a7811ad6753484a, type: 3}
+  GameFailPanelPrefab: {fileID: -628968699246243093, guid: 8b9a2d82dd9299146a7811ad6753484a, type: 3}
   CurrentPanel: {fileID: 0}
 --- !u!114 &460411347
 MonoBehaviour:
@@ -258,7 +258,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

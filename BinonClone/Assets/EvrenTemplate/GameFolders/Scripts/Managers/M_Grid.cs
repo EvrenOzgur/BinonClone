@@ -122,7 +122,7 @@ public class M_Grid : MonoBehaviour
             int _scoreUp = 0;
             for (int i = 0; i < _succeedScoreList.Count; i++)
             {
-                _scoreUp += (i * 10);
+                _scoreUp += ((i+1) * 10);
             }
             M_Level.OnSetScore?.Invoke(_scoreUp);
         }
@@ -187,7 +187,6 @@ public class M_Grid : MonoBehaviour
             if (_continueControlList.Count == 0)
             {
                 M_Observer.OnGameFail?.Invoke();
-                print("Fail");
             }
         }
        
